@@ -1,0 +1,66 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block title %}Home | Golden Market{% endblock %}
+
+{% block content %}
+<!-- ======== Hero Section ======== -->
+<div class="p-5 mb-4 bg-light rounded-3 text-center shadow-sm">
+  <h1 class="display-5 fw-bold text-primary">Welcome to Golden Market</h1>
+  <p class="lead">Shop smarter — discover amazing deals on top products.</p>
+  <a href="{% url 'catalog:search' %}" class="btn btn-primary btn-lg mt-2">Start Shopping</a>
+</div>
+
+<!-- ======== Featured Products ======== -->
+<h3 class="mb-4">✨ Featured Products</h3>
+<div class="row">
+  {% for product in featured %}
+  <div class="col-md-3 mb-4">
+    <div class="card h-100 shadow-sm">
+      <a href="{{ product.get_absolute_url }}">
+        {% if product.image %}
+          <img src="{{ product.image.url }}" class="card-img-top" alt="{{ product.name }}">
+        {% else %}
+          <img src="{% static 'images/default.png' %}" class="card-img-top" alt="No image">
+        {% endif %}
+      </a>
+      <div class="card-body text-center">
+        <h5 class="card-title">{{ product.name }}</h5>
+        {% if product.discount_percent %}
+          <p class="text-muted mb-1"><del>Ksh {{ product.price }}</del></p>
+          <p class="text-danger fw-bold">Ksh {{ product.discounted_price|floatformat:2 }}</p>
+        {% else %}
+          <p class="fw-bold">Ksh {{ product.price }}</p>
+        {% endif %}
+        <a href="{{ product.get_absolute_url }}" class="btn btn-outline-primary btn-sm mt-2">View</a>
+      </div>
+    </div>
+  </div>
+  {% empty %}
+  <p>No featured products available.</p>
+  {% endfor %}
+</div>
+
+<!-- ======== Categories ======== -->
+<h3 class="mt-5 mb-4">🛒 Shop by Category</h3>
+<div class="row">
+  {% for cat in categories %}
+  <div class="col-md-3 mb-4 text-center">
+    <a href="{{ cat.get_absolute_url }}" class="text-decoration-none text-dark">
+      <div class="card shadow-sm border-0 h-100">
+        {% if cat.image %}
+          <img src="{{ cat.image.url }}" class="card-img-top" style="height:180px; object-fit:cover;">
+        {% else %}
+          <img src="{% static 'images/default-category.jpg' %}" class="card-img-top" style="height:180px;">
+        {% endif %}
+        <div class="card-body">
+          <h6 class="card-title">{{ cat.name }}</h6>
+        </div>
+      </div>
+    </a>
+  </div>
+  {% empty %}
+  <p>No categories available.</p>
+  {% endfor %}
+</div>
+{% endblock %}
